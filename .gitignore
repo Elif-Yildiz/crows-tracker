@@ -37,3 +37,6 @@ scripts/commit-message.txt
 .env
 .env.local
 .env.*.local
+
+# Yerel editör/araç ayarları
+.claude/

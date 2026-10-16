@@ -31,7 +31,7 @@ export default function Layout() {
       <main className="flex-1 pb-10">
         <Outlet />
       </main>
-      <footer className="border-t border-smoke/50 py-4 text-center text-xs text-dust/70">
+      <footer className="border-t border-smoke/50 pt-4 pb-20 text-center text-xs text-dust/70 sm:pb-16">
         MCDM Crows Playtest 3 için hayran yapımı takip aracı · Veriler tüm cihazlarda canlı senkronlanır
       </footer>
     </div>

@@ -41,7 +41,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastCtx.Provider value={push}>
       {children}
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[60] flex flex-col items-center gap-2 px-4" aria-live="polite">
+      <div className="pointer-events-none fixed inset-x-0 top-4 z-[60] flex flex-col items-center gap-2 px-4" aria-live="polite">
         {toasts.map((t) => (
           <div key={t.id} className={`animate-pop rounded-xl border px-4 py-2 text-sm font-medium shadow-lg ${t.tone === 'error' ? 'border-blood bg-blood/90' : 'border-smoke bg-ash/95'}`}>
             {t.text}

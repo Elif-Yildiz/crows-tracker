@@ -61,9 +61,25 @@ body {
     @apply font-display tracking-wide text-bone;
 }
 
-/* iOS güvenli alan */
+/* Netlify ücretsiz planı sağ alt köşeye kapatılamayan bir "Powered by Netlify" rozeti ekler
+   (en üst katmanda, ~56px yüksek). Alttaki sabit öğeler bu alanın üstünde durur. */
+:root {
+  --badge-space: 72px;
+}
+
+/* iOS güvenli alan + rozet payı: alttan açılan pencerenin son düğmeleri rozetin altında kalmasın */
 .safe-bottom {
-  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  padding-bottom: calc(max(1rem, env(safe-area-inset-bottom)) + var(--badge-space));
+}
+@media (min-width: 640px) {
+  .safe-bottom {
+    padding-bottom: 1.25rem;
+  }
+}
+
+/* Sabit alt çubukları rozetin üstüne yerleştirir */
+.above-badge {
+  bottom: calc(env(safe-area-inset-bottom) + var(--badge-space));
 }
 
 @keyframes pop {

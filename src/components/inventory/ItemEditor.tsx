@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Character, Item } from '../../interfaces'
 import { CATEGORY_LABELS } from '../../data/items'
+import ItemInfo from './ItemInfo'
 import { autoPlace } from '../../services/inventory'
 import { uid } from '../../services/storage'
 import { ConfirmButton, Modal, Stepper, useToast } from '../ui'
@@ -60,6 +61,7 @@ export default function ItemEditor({ item, onClose, onChange }: Props) {
           {CATEGORY_LABELS[draft.category]} · {draft.size} slot · {ZONE_LABELS[draft.zone]}
           {draft.zone !== 'ground' && draft.zone !== 'magic' ? ` ${draft.index + 1}` : ''}
         </p>
+        <ItemInfo name={item.name} category={item.category} />
         <div>
           <label className="label" htmlFor="it-name">İsim</label>
           <input id="it-name" className="input" value={draft.name} onChange={(e) => patch({ name: e.target.value })} />

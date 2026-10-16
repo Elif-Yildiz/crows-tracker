@@ -10,6 +10,7 @@ import { useToast } from '../ui'
 import { ItemTile } from './ItemTile'
 import ItemEditor from './ItemEditor'
 import AddItemModal from './AddItemModal'
+import ItemInfo from './ItemInfo'
 
 type SlotZone = Exclude<Zone, 'ground'>
 const ZONES: { zone: SlotZone; title: string; hint: string; cols: number }[] = [
@@ -144,15 +145,22 @@ export default function InventoryBoard({ character, onChange }: Props) {
       </div>
 
       {selected && !activeId && (
-        <div className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-gold/40 bg-coal/95 px-4 pt-3 backdrop-blur sm:inset-x-auto sm:right-6 sm:bottom-6 sm:rounded-2xl sm:border">
-          <div className="mx-auto flex max-w-xl flex-wrap items-center gap-2">
-            <p className="min-w-0 flex-1 text-sm">
+        <div className="above-badge animate-pop fixed inset-x-3 z-40 rounded-2xl border border-gold/40 bg-coal/95 px-4 py-3 shadow-2xl shadow-black/60 backdrop-blur sm:inset-x-auto sm:left-6 sm:w-[32rem]">
+          <div className="flex items-start justify-between gap-2">
+            <p className="min-w-0 text-sm">
               <span className="font-bold text-gold">{selected.name}</span>
-              <span className="block text-xs text-dust">Hedef slota dokun</span>
+              <span className="text-xs text-dust"> · hedef slota dokun</span>
+              <ItemInfo name={selected.name} category={selected.category} compact />
             </p>
-            <button className="btn-ghost min-h-10 text-sm" onClick={() => { setEditingId(selected.id); setSelectedId(null) }}>Düzenle</button>
-            {selected.zone !== 'ground' && <button className="btn-ghost min-h-10 text-sm" onClick={() => tryMove(selected.id, 'ground', 0)}>Yere bırak</button>}
-            <button className="btn-ghost min-h-10 text-sm" onClick={() => setSelectedId(null)} aria-label="Seçimi iptal et">✕</button>
+            <button className="btn-ghost min-h-9 shrink-0 px-3 text-sm" onClick={() => setSelectedId(null)} aria-label="Seçimi iptal et">✕</button>
+          </div>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <button className="btn-ghost min-h-10 text-sm" onClick={() => { setEditingId(selected.id); setSelectedId(null) }}>Düzenle / bilgi</button>
+            {selected.zone !== 'ground' ? (
+              <button className="btn-ghost min-h-10 text-sm" onClick={() => tryMove(selected.id, 'ground', 0)}>Yere bırak</button>
+            ) : (
+              <span />
+            )}
           </div>
         </div>
       )}

@@ -4,6 +4,7 @@ import { CATEGORY_LABELS, ITEM_CATALOG } from '../../data/items'
 import { autoPlace, itemFromTemplate } from '../../services/inventory'
 import { Modal, Stepper, useToast } from '../ui'
 import { CATEGORY_STYLE } from './ItemTile'
+import ItemInfo from './ItemInfo'
 
 interface Props {
   open: boolean
@@ -52,12 +53,15 @@ export default function AddItemModal({ open, onClose, onChange }: Props) {
             </button>
           ))}
         </div>
-        <ul className="max-h-64 divide-y divide-smoke/60 overflow-y-auto rounded-xl ring-1 ring-smoke">
+        <ul className="max-h-80 divide-y divide-smoke/60 overflow-y-auto rounded-xl ring-1 ring-smoke">
           {results.map((t) => (
             <li key={t.name}>
-              <button className="flex min-h-12 w-full items-center gap-3 px-3 text-left hover:bg-ash" onClick={() => add(t)}>
-                <span className={`h-6 w-1 rounded ${CATEGORY_STYLE[t.category].bar}`} />
-                <span className="flex-1 text-sm font-medium">{t.name}</span>
+              <button className="flex min-h-12 w-full items-center gap-3 px-3 py-2 text-left hover:bg-ash" onClick={() => add(t)}>
+                <span className={`w-1 self-stretch rounded ${CATEGORY_STYLE[t.category].bar}`} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-medium">{t.name}</span>
+                  <ItemInfo name={t.name} category={t.category} compact />
+                </span>
                 <span className="text-xs text-dust">
                   {t.size > 1 && `${t.size} slot · `}{t.stack > 1 && `yığın ${t.stack}`}{t.ad ? ` · AD ${t.ad}` : ''}
                 </span>
