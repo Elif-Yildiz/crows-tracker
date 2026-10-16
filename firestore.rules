@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Crows Tracker güvenlik kuralları (ücretsiz Spark planı, hesap gerektirmez)
+// - Oyunlar yalnızca 6 haneli kodla bulunabilir: tüm oyunları listelemek yasak (limit 1 zorunlu).
+// - Oyun kimlikleri tahmin edilemez UUID'lerdir; karakterlere yalnızca oyunu bilen erişir.
+// - Yazılan veriler biçim ve boyut açısından doğrulanır; oyunun kodu ve sahibi sonradan değiştirilemez.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function validGame(data) {
+      return data.keys().hasAll(['id', 'code', 'name', 'ownerUid', 'createdAt'])
+        && data.keys().size() <= 10
+        && data.code is string && data.code.matches('^[A-Z2-9]{6}$')
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.ownerUid is string && data.ownerUid.size() <= 64;
+    }
+
+    function validCharacter(data, gameId, charId) {
+      return data.id == charId
+        && data.gameId == gameId
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.inventory is list && data.inventory.size() <= 200
+        && data.wounds is list && data.wounds.size() <= 10
+        && data.keys().size() <= 40;
+    }
+
+    match /games/{gameId} {
+      allow get: if true;
+      allow list: if request.query.limit <= 1;
+      allow create: if request.resource.data.id == gameId && validGame(request.resource.data);
+      allow update: if validGame(request.resource.data)
+        && request.resource.data.code == resource.data.code
+        && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow delete: if true;
+
+      match /characters/{charId} {
+        function gameExists() {
+          return exists(/databases/$(database)/documents/games/$(gameId));
+        }
+        allow read: if true;
+        allow create, update: if gameExists() && validCharacter(request.resource.data, gameId, charId);
+        allow delete: if true;
+      }
+    }
+  }
+}
